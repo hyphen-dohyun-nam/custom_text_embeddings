@@ -1,0 +1,5 @@
+target
+Cargo.lock
+models/QWEN3-Embedding-0.6B/config.json
+models/QWEN3-Embedding-0.6B/model.safetensors
+models/QWEN3-Embedding-0.6B/tokenizer.json
