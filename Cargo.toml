@@ -1,20 +1,13 @@
 [package]
 name = "text-embedding-inference"
-version = "0.1.0"
-edition = "2021"
-
-[lib]
-name = "text_embedding_inference"
-path = "src/lib.rs"
-
-[[bin]]
-name = "main"
-path = "src/main.rs"
+version = "0.0.1"
+edition = "2024"
 
 [dependencies]
 candle-core = "0.9.1"
 candle-nn = "0.9.1"
 anyhow = "1.0"
 serde_json = "1.0"
+tokenizers = "0.21.4"
 serde = { version = "1.0", features = ["derive"] }
 safetensors = "0.4"

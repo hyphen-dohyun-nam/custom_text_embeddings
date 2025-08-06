@@ -46,7 +46,7 @@ fn main() -> Result<()> {
     let mut example_embeddings = Vec::new();
     
     for (_i, text) in example_texts.iter().enumerate() {
-        let embedding = embedder.str2vec(text)?;
+        let embedding = embedder.embed(text)?;
         let normalized = QwenEmbedder::normalize_l2(&embedding);
         example_embeddings.push((text, normalized));
         // println!("{}. '{}' -> embedding dim: {}", i+1, text, embedding.len());
@@ -72,7 +72,7 @@ fn main() -> Result<()> {
         }
         
         // Process user input
-        match embedder.str2vec(input) {
+        match embedder.embed(input) {
             Ok(embedding) => {
                 let normalized = QwenEmbedder::normalize_l2(&embedding);
                 
