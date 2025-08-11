@@ -4,6 +4,7 @@ version = "0.0.1"
 edition = "2024"
 
 [dependencies]
+hf-hub = "0.4.3"
 candle-core = "0.9.1"
 anyhow = "1.0"
 tokenizers = "0.21.4"

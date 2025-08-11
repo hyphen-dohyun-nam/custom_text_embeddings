@@ -1,7 +1,7 @@
 use anyhow::{Error as E, Result};
 use candle_core::{Device, Tensor, safetensors::load};
-use std::path::Path;
 use tokenizers::Tokenizer;
+use hf_hub::api::sync::Api;
 
 pub struct QwenEmbedder {
     embedding_weights: Tensor,
@@ -10,16 +10,18 @@ pub struct QwenEmbedder {
 }
 
 impl QwenEmbedder {
-    pub fn new<P: AsRef<Path>>(model_dir: P) -> Result<Self> {
+    pub fn load() -> Result<Self> {
         let device = Device::Cpu;
-        let model_dir = model_dir.as_ref();
-        
-        let tokenizer_path = model_dir.join("tokenizer.json");
-        let tokenizer = Tokenizer::from_file(tokenizer_path).map_err(E::msg)?;
 
-        let weights_path = model_dir.join("model.safetensors");
-        let tensors = load(&weights_path, &device)?;
-        
+        let api = Api::new().unwrap();
+        let repo = api.model("Qwen/Qwen3-Embedding-0.6B".to_string());
+
+        let tokenizer_json = repo.get("tokenizer.json").unwrap();
+        let tokenizer = Tokenizer::from_file(tokenizer_json).map_err(E::msg)?;
+
+        let weights_safetensor = repo.get("model.safetensors")?;
+        let tensors = load(&weights_safetensor, &device)?;
+
         let embedding_weights = tensors.get("embed_tokens.weight")
             .ok_or_else(|| {
                 let available_keys: Vec<_> = tensors.keys().collect();

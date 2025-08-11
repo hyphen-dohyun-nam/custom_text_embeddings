@@ -3,7 +3,8 @@ use text_embedding_inference::QwenEmbedder;
 use std::io::{self, Write};
 
 fn main() -> Result<()> {
-    let embedder = QwenEmbedder::new("models/QWEN3-Embedding-0.6B")?;
+    // let embedder = QwenEmbedder::new("models/QWEN3-Embedding-0.6B")?;
+    let embedder = QwenEmbedder::load()?;
 
     println!("=== QWEN3-Embedding-0.6B Interactive Demo ===\n");
     
