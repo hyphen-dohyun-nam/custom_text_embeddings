@@ -8,6 +8,7 @@ async fn main() -> Result<()> {
     let embedder = QwenEmbedder::load()?;
     
     let db = TursoDB::new("src/turso_db/data.db").await?;
+    db.delete().await?;
     db.create().await?;
     println!("=== QWEN3-Embedding-0.6B Interactive Demo ===\n");
     

@@ -24,6 +24,15 @@ impl TursoDB {
         ).await?;
         Ok(())
     }
+
+    pub async fn delete(&self) -> Result<()> {
+        self.conn.execute(
+            "DROP TABLE IF EXISTS candidates",
+            ()
+        ).await?;
+        Ok(())
+    }
+
     pub async fn insert(&self, description: &str, embedding: &[f32]) -> Result<()> {
         //convert &f[32] to Blob(Vec<u8>)
         let embedding_bytes = unsafe {
@@ -67,5 +76,5 @@ impl TursoDB {
         }
         Ok(results)
     }
-    
+
 }
