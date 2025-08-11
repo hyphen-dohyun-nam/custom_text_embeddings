@@ -1,11 +1,14 @@
 use anyhow::Result;
 use text_embedding_inference::QwenEmbedder;
+use text_embedding_inference::TursoDB;
 use std::io::{self, Write};
 
-fn main() -> Result<()> {
-    // let embedder = QwenEmbedder::new("models/QWEN3-Embedding-0.6B")?;
+#[tokio::main]
+async fn main() -> Result<()> {
     let embedder = QwenEmbedder::load()?;
-
+    
+    let db = TursoDB::new("src/turso_db/data.db").await?;
+    db.create().await?;
     println!("=== QWEN3-Embedding-0.6B Interactive Demo ===\n");
     
     let example_texts = vec![
@@ -41,9 +44,16 @@ fn main() -> Result<()> {
     
     for (_i, text) in example_texts.iter().enumerate() {
         let embedding = embedder.forward(text, &false)?;
+        db.insert(text, &embedding.clone()).await?;
         example_embeddings.push((text, embedding));
     }
-    
+    let search_results = db.vector_search(&example_embeddings[0].1).await?;
+    println!("Search results for '{}':", example_texts[0]);
+    println!("Number of results: {}", search_results.len());
+    for (i, (desc, dist)) in search_results.iter().enumerate() {
+        println!("Result {}: {} (distance: {:.4})", i, desc, dist);
+    }
+
     println!("Enter your own sentences to get embeddings and compare with examples!");
     println!("Type 'quit' or 'exit' to stop.\n");
     
@@ -62,40 +72,27 @@ fn main() -> Result<()> {
         
         match embedder.forward(input, &true) {
             Ok(embedding) => {
-                
                 println!("\n✅ Your sentence: '{}'", input);
                 println!("Embedding dimension: {}", embedding.len());
                 println!("First 10 values: {:?}", &embedding[..10.min(embedding.len())]);
-                
-                // Find most similar examples
-                println!("\n🔍 Similarity with example sentences:");
-                let mut similarities: Vec<(usize, f32)> = example_embeddings
-                    .iter()
-                    .enumerate()
-                    .map(|(i, (_, example_emb))| {
-                        let sim = QwenEmbedder::cosine_similarity(&embedding, example_emb);
-                        (i, sim)
-                    })
-                    .collect();
-                
-                // Sort by similarity (highest first)
-                similarities.sort_by(|a, b| b.1.partial_cmp(&a.1).unwrap());
-                
-                // Table header
-                println!("\n| {:<8} | {:<60} |", "Score", "Example Sentence");
-                println!("{}", "-".repeat(72));
 
-                // Show top 5 most similar
-                for (_i, (idx, similarity)) in similarities.iter().take(5).enumerate() {
-                    println!("| {:<8.4} | {:<60} |", similarity, example_texts[*idx]);
+                // Use TursoDB to find most similar examples
+                let db_results = db.vector_search(&embedding).await?;
+                println!("\n🔍 Top 5 most similar candidates from DB:");
+                println!("| {:<8} | {:<60} |", "Dist", "Description");
+                println!("{}", "-".repeat(72));
+                for (_i, (desc, dist)) in db_results.iter().take(5).enumerate() {
+                    println!("| {:<8.4} | {:<60} |", dist, desc);
                 }
 
-                // Table header for least similar
+                // Show least similar
                 println!("\nLeast similar:");
-                println!("| {:<8} | {:<60} |", "Score", "Example Sentence");
+                println!("| {:<8} | {:<60} |", "Dist", "Description");
                 println!("{}", "-".repeat(72));
-                for (_i, (idx, similarity)) in similarities.iter().rev().take(3).enumerate() {
-                    println!("| {:<8.4} | {:<60} |", similarity, example_texts[*idx]);
+                let mut db_results_sorted = db_results.clone();
+                db_results_sorted.sort_by(|a, b| b.1.partial_cmp(&a.1).unwrap());
+                for (_i, (desc, dist)) in db_results_sorted.iter().take(3).enumerate() {
+                    println!("| {:<8.4} | {:<60} |", dist, desc);
                 }
 
                 println!();

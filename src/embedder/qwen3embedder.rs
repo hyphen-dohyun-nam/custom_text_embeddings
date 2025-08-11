@@ -62,20 +62,30 @@ impl QwenEmbedder {
     fn get_detailed_instruct(task_description: &str, query: &str) -> String {
         format!("Instruct: {task_description}\nQuery:{query}")
     }
-    
-    pub fn cosine_similarity(vec1: &[f32], vec2: &[f32]) -> f32 {
+
+    pub fn cosine_distance(vec1: &[f32], vec2: &[f32]) -> Result<f64> {
         if vec1.len() != vec2.len() {
-            return 0.0;
+            return Err(E::msg("Invalid vector dimensions"));
         }
-        
-        let dot_product: f32 = vec1.iter().zip(vec2.iter()).map(|(a, b)| a * b).sum();
-        let norm1: f32 = vec1.iter().map(|x| x * x).sum::<f32>().sqrt();
-        let norm2: f32 = vec2.iter().map(|x| x * x).sum::<f32>().sqrt();
-        
+
+        if vec1.iter().any(|x| !x.is_finite()) || vec2.iter().any(|x| !x.is_finite()) {
+            return Err(E::msg("Invalid vector value"));
+        }
+
+        let (mut dot, mut norm1, mut norm2) = (0.0f64, 0.0f64, 0.0f64);
+        for i in 0..vec1.len() {
+            let e1 = vec1[i] as f64;
+            let e2 = vec2[i] as f64;
+            dot += e1 * e2;
+            norm1 += e1 * e1;
+            norm2 += e2 * e2;
+        }
+
         if norm1 == 0.0 || norm2 == 0.0 {
-            0.0
-        } else {
-            dot_product / (norm1 * norm2)
+            return Err(E::msg("Invalid vector value"));
         }
+
+        // Ok(1.0 - (dot / (norm1 * norm2).sqrt()))
+        Ok(dot / (norm1 * norm2).sqrt())
     }
 }

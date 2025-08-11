@@ -1,3 +1,3 @@
-pub mod qwen_embedder;
+pub mod qwen3embedder;
 
-pub use qwen_embedder::QwenEmbedder;
+pub use qwen3embedder::QwenEmbedder;
