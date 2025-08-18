@@ -34,22 +34,11 @@ text-embeddings-inference/
 └── target/              # Build output
 ```
 
-## Resources Used
-- **QWEN3 Embedder:** Provides state-of-the-art text embeddings for semantic search.
-- **Candle:** Rust-based ML inference engine powering QWEN3 model execution.
-- **Turso:** Embedded database for fast, local data storage and retrieval.
-- **Dioxus:** Rust framework for building desktop/web UIs (used for the demo app).
-
 ## Development Setup Guide
 
 ### Prerequisites
 - [Rust](https://www.rust-lang.org/tools/install)
-- [Dioxus CLI](https://dioxuslabs.com/learn/0.4/getting_started/installation/)
-
-### Install Dioxus CLI
-```fish
-cargo install dioxus-cli
-```
+- [Dioxus-CLI](https://dioxuslabs.com/learn/0.6/getting_started/)
 
 ### Run the App
 ```fish
