@@ -1,12 +1,27 @@
 [package]
-name = "text-embedding-inference"
+name = "text-embeddings-inference"
 version = "0.0.1"
+authors = ["dhynm <dhnam2234@gmail.com>"]
 edition = "2024"
 
 [dependencies]
+dioxus = { version = "0.6.3", features = ["desktop"] }
+
 hf-hub = "0.4.3"
 candle-core = "0.9.1"
 anyhow = "1.0"
 tokenizers = "0.21.4"
 turso = "0.1.3"
 tokio = { version = "1.0", features = ["full"] }
+
+[profile]
+
+[profile.wasm-dev]
+inherits = "dev"
+opt-level = 1
+
+[profile.server-dev]
+inherits = "dev"
+
+[profile.android-dev]
+inherits = "dev"

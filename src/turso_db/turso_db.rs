@@ -54,8 +54,7 @@ impl TursoDB {
                     vector_extract(embedding), 
                     vector_distance_cos(embedding, vector32('[{}]')) AS distance 
             FROM candidates
-            ORDER BY distance ASC
-            LIMIT 5",
+            ORDER BY distance ASC",
             embedding_str
         );
         let mut rows = self.conn.query(&sql, ()).await?;
