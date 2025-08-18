@@ -15,7 +15,6 @@ impl QwenEmbedder {
     pub async fn load() -> Result<Self> {
         let device = Device::Cpu;
 
-        // Using blocking API inside a spawn_blocking to make it async
         let model_data = task::spawn_blocking(move || -> Result<(std::path::PathBuf, std::path::PathBuf)> {
             let api = Api::new().map_err(E::msg)?;
             let repo = api.model("Qwen/Qwen3-Embedding-0.6B".to_string());
@@ -27,19 +26,16 @@ impl QwenEmbedder {
         }).await??;
         
         let (tokenizer_json, weights_safetensor) = model_data;
-        
-        // Loading tokenizer is CPU-bound, so offload to a blocking task
+
         let tokenizer = task::spawn_blocking(move || {
             Tokenizer::from_file(tokenizer_json).map_err(E::msg)
         }).await??;
 
-        // Model loading is CPU-bound, so offload to a blocking task
         let (weights_path, device_clone) = (weights_safetensor, device.clone());
         let tensors = task::spawn_blocking(move || {
             load(&weights_path, &device_clone).map_err(E::msg)
         }).await??;
 
-        // Extract the embedding weights
         let embedding_weights = tensors.get("embed_tokens.weight")
             .ok_or_else(|| {
                 let available_keys: Vec<_> = tensors.keys().collect();
@@ -65,19 +61,16 @@ impl QwenEmbedder {
             text.to_string()
         };
 
-        // Tokenization and embedding generation can be CPU intensive, so offload to a blocking task
         let tokenizer = self.tokenizer.clone();
         let embedding_weights = self.embedding_weights.clone();
         let device = self.device.clone();
         let final_text = processed_text.clone();
         
         task::spawn_blocking(move || -> Result<Vec<f32>> {
-            // Tokenize the text
             let tokens = tokenizer.encode(final_text, false)
                 .map_err(|e| E::msg(format!("Tokenizer error: {}", e)))?;
             let ids: Vec<u32> = tokens.get_ids().to_vec();
 
-            // Create tensor and get embeddings
             let ids_tensor = Tensor::new(ids, &device)
                 .map_err(E::msg)?;
             let embeddings = embedding_weights.embedding(&ids_tensor)
@@ -104,7 +97,6 @@ impl QwenEmbedder {
             return Err(E::msg("Invalid vector value"));
         }
         
-        // Vector operations can be CPU intensive for large vectors, so offload to a blocking task
         let v1 = vec1.to_vec();
         let v2 = vec2.to_vec();
         

@@ -76,7 +76,6 @@ async fn main() -> Result<()> {
                 println!("Embedding dimension: {}", embedding.len());
                 println!("First 10 values: {:?}", &embedding[..10.min(embedding.len())]);
 
-                // Use TursoDB to find most similar examples
                 let db_results = db.vector_search(&embedding).await?;
                 println!("\n🔍 Top 5 most similar candidates from DB:");
                 println!("| {:<8} | {:<60} |", "Dist", "Description");
@@ -84,8 +83,7 @@ async fn main() -> Result<()> {
                 for (_i, (desc, dist)) in db_results.iter().take(5).enumerate() {
                     println!("| {:<8.4} | {:<60} |", dist, desc);
                 }
-
-                // Show least similar
+                
                 println!("\nLeast similar:");
                 println!("| {:<8} | {:<60} |", "Dist", "Description");
                 println!("{}", "-".repeat(72));
