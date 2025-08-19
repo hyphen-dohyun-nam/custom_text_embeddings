@@ -13,10 +13,10 @@
 
 > [!NOTE]
 > - ```hf_hub``` will save any models loaded to the huggingface cache folder by default, not the project folder. They will need to be deleted by clearning the cache, either through restarting the device, deleting the hugginface cache folder contents, or some other means.
-> - The current model used, Qwen3-Embedding-0.6B, takes up approximately ```1.3GB`` space in the device cache.
-> - Qwen3-Embedding-0.6B only has up to 1024 embedding dimentions with limited vocabulary, meaning it performs relatively well with english but lacks in other languages (tested with mandarin chinese and korean).
-> - Qwen3-Embedding-0.6B is capable of semantic search, but its features seemed lacking. In terms of performance, there wasn't a meaningful difference between it and other small-sized models capable of non-semantic text embeddings.
-> - Turso DB, as a successor to Sqlite, holds the same issues as sqlite like having one global lock, getting outperformed past a few ten GB compared to dedicated client-server databases.
+> - The current model used, ```Qwen3-Embedding-0.6B```, takes up approximately 1.3GB space in the device cache.
+> - ```Qwen3-Embedding-0.6B``` only has up to 1024 embedding dimentions with limited vocabulary, meaning it performs relatively well with english but lacks in other languages (tested with mandarin chinese and korean).
+> - ```Qwen3-Embedding-0.6B``` is capable of semantic search, but its features seemed lacking. In terms of performance, there wasn't a meaningful difference between it and other small-sized models capable of non-semantic text embeddings.
+> - ```Turso DB```, as a successor to Sqlite, holds the same issues as sqlite like having one global lock, getting outperformed past a few ten GB compared to dedicated client-server databases.
 
 > [!Warning]
 > - Turso DB and Dioxus still pre-release, so they are susceptable to unexpected behaviors.
