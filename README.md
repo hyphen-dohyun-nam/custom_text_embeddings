@@ -12,10 +12,12 @@
 - **Live Demo:** Enter queries and instantly see the most relevant matches from the database, including their similarity scores and descriptions.
 
 > [!NOTE]
-> - Turso DB and Dioxus still pre-release, so they are susceptable to unexpected behaviors
 > - Qwen3-Embedding-0.6B only has up to 1024 embedding dimentions with limited vocabulary, meaning it performs relatively well with english but lacks in other languages (tested with mandarin chinese and korean)
 > - Qwen3-Embedding-0.6B is capable of semantic search, but its features seemed lacking. In terms of performance, there wasn't a meaningful difference between it and other small-sized models capable of non-semantic text embeddings.
-> - Turso DB, as a successor to Sqlite, holds the same issues as sqlite like having one global lock, getting outperformed past a few ten GB compared to dedicated client-server databases. 
+> - Turso DB, as a successor to Sqlite, holds the same issues as sqlite like having one global lock, getting outperformed past a few ten GB compared to dedicated client-server databases.
+
+> [!Warning]
+> - Turso DB and Dioxus still pre-release, so they are susceptable to unexpected behaviors
 
 ## Project Structure
 ```
