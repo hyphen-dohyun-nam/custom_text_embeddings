@@ -48,7 +48,8 @@ text-embeddings-inference/
 ## Development Setup Guide
 #### Prerequisites
 - [Rust](https://www.rust-lang.org/tools/install)
---
+
+---
 ### Method 1) Using Dioxus CLI
 ##### Prerequisites
 - [Dioxus-CLI](https://dioxuslabs.com/learn/0.6/getting_started/)
@@ -59,7 +60,7 @@ dx serve
 ```
 This will start the Dioxus desktop app. Open your browser or desktop window to interact with the RAG demo.
 
---
+---
 ### Method 2) Using Cargo
 ##### Run the App
 ```fish
