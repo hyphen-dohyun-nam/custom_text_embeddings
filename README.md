@@ -64,5 +64,6 @@ This will start the Dioxus desktop app. Open your browser or desktop window to i
 ```fish
 cargo run
 ```
+It is reccomended to use dioxus-cli, but if for any reason you can't use dioxus-cli's dx command, use cargo instead.
 ---
 For more details, see the source files in `src/` and the assets in `assets/`.
