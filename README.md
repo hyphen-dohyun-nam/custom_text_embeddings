@@ -19,7 +19,7 @@
 > - ```Turso DB```, as a successor to Sqlite, holds the same issues as sqlite like having one global lock, getting outperformed past a few ten GB compared to dedicated client-server databases.
 
 > [!Warning]
-> - Turso DB and Dioxus still pre-release, so they are susceptable to unexpected behaviors.
+> - ```Turso DB``` and ```Dioxus``` still pre-release, so they are susceptable to unexpected behaviors.
 
 ## Project Structure
 ```
