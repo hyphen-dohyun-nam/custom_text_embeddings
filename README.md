@@ -3,12 +3,19 @@
 
 ## Features
 - **Retrieval-Augmented Generation (RAG):** Search and retrieve relevant information using text embeddings.
-- **QWEN3 Embedding Model:** Uses QWEN3-Embedding-0.6B for high-quality text embeddings.
-- **Candle Backend:** Efficient inference engine for running QWEN3 models in Rust.
-- **Turso Database:** Fast, embedded SQLite-compatible database for storing and retrieving data.
-- **Dioxus Frontend:** Modern, reactive desktop UI built with Dioxus for seamless user experience.
+- **HuggingFace API Integration:** Integrated with the HuggingFace API so the code stays lean
+- **QWEN3 Embedding Model:** Uses QWEN3-Embedding-0.6B for high-quality text embeddings. Cross-compatible with any of the Qwen3-Embedding models. 
+- **Candle Backend:** Efficient inference engine for running QWEN3 models in Rust, locally, on the CPU.
+- **Turso Database:** Fast, embedded SQLite-compatible database for storing and retrieving data. Native support for FTS5, vector search, etc.
+- **Dioxus Frontend:** Modern, reactive desktop UI built with Dioxus for seamless user experience. Async integrated with std::sync::Arc and dioxus::spawn.
 - **Semantic Search Results:** Results are ranked by cosine distance between query and database embeddings. Lower scores indicate higher similarity (more relevant results).
 - **Live Demo:** Enter queries and instantly see the most relevant matches from the database, including their similarity scores and descriptions.
+
+> [!NOTE]
+> Turso DB and Dioxus still pre-release, so they are susceptable to unexpected behaviors
+> Qwen3-Embedding-0.6B only has up to 1024 embedding dimentions with limited vocabulary, meaning it performs relatively well with english but lacks in other languages (tested with mandarin chinese and korean)
+> Qwen3-Embedding-0.6B is capable of semantic search, but its features seemed lacking. In terms of performance, there wasn't a meaningful difference between it and other small-sized models capable of non-semantic text embeddings.
+> Turso DB, as a successor to Sqlite, holds the same issues as sqlite like having one global lock, getting outperformed past a few ten GB compared to dedicated client-server databases. 
 
 ## Project Structure
 ```
