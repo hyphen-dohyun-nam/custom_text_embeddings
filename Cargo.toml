@@ -1,7 +1,7 @@
 [package]
 name = "text-embeddings-inference"
 version = "0.0.1"
-authors = ["dhynm <dhnam2234@gmail.com>"]
+authors = ["dohyunnam <dohyun.nam@hyphen-connect.com>"]
 edition = "2024"
 
 [dependencies]
